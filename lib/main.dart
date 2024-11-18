@@ -1,37 +1,22 @@
-<<<<<<< HEAD
-import 'package:eos_todolist1/screens/home_screen.dart';
-=======
->>>>>>> 52b824f1192b00c0b4d0d76b57fc0e47ce0c86da
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:eos_todolist1/widgets/add_button.dart';
+import 'package:eos_todolist1/widgets/todo_item.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'EOS ToDoList',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        fontFamily: 'Pretendard',
-        useMaterial3: true,
-      ),
-      home: HomeScreen(),
-    );
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-<<<<<<< HEAD
+class _HomeScreenState extends State<HomeScreen> {
+  List<String> toDoLists = [];
 
-=======
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+  @override
+  void initState() {
+    super.initState();
+    toDoLists.addAll(["11111111", "22222222", "33333333"]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +34,11 @@ class MyHomePage extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  height: 140,
                   width: 140,
+                  height: 140,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 10,
-                      color: Colors.grey,
-                    ),
                     color: Colors.white,
+                    border: Border.all(width: 10, color: Colors.grey),
                     borderRadius: BorderRadius.circular(70),
                   ),
                   child: Center(
@@ -74,27 +56,145 @@ class MyHomePage extends StatelessWidget {
                       Text(
                         '김준식',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Pretendard',
                         ),
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text('최강한화 내년에는 비상하리')
+                      SizedBox(height: 15),
+                      Text('몽통회장'),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
-          Container(
-            height: 500,
-            color: Color(0xFFA4C639).withOpacity(0.1),
-          )
+          Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height - 400,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFA4C639).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 20,
+                left: MediaQuery.of(context).size.width / 2 - 75,
+                child: Container(
+                  width: 150,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFA4C639).withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "To do list",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 23,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 50, left: 40, right: 25),
+                child: Container(
+                  height: MediaQuery.of(context).size.height - 450,
+                  child: ListView.builder(
+                    itemCount: toDoLists.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ToDoItem(
+                        title: toDoLists[index],
+                        onDelete: () {
+                          setState(() {
+                            toDoLists.removeAt(index);
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 30,
+                right: 50,
+                child: AddButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        String newTask = '';
+                        return AlertDialog(
+                          title: Text(
+                            '할일추가',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          content: TextField(
+                            onChanged: (value) {
+                              newTask = value;
+                            },
+                            decoration: InputDecoration(
+                              hintText: '할 일을 입력하세요',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                '취소',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (newTask.isNotEmpty) {
+                                    toDoLists.add(newTask);
+                                  }
+                                });
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                '추가',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
->>>>>>> 52b824f1192b00c0b4d0d76b57fc0e47ce0c86da
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: HomeScreen(),
+  ));
+}
